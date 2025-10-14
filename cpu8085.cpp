@@ -292,8 +292,20 @@ void CPU8085::executeInstruction(uint8_t opcode) {
         case 0x20: A = 0; break; // RIM (simplified)
         case 0x30: break;         // SIM (simplified)
         
+        // Undefined/Illegal opcodes in 8085 - treat as NOP
+        case 0x08: break; // *NOP (undefined)
+        case 0x10: break; // *NOP (undefined)
+        case 0x18: break; // *NOP (undefined)
+        case 0x28: break; // *NOP (undefined)
+        case 0x38: break; // *NOP (undefined)
+        case 0xCB: break; // *NOP (undefined)
+        case 0xD9: break; // *NOP (undefined - RET in 8080, but NOP in 8085)
+        case 0xDD: break; // *NOP (undefined)
+        case 0xED: break; // *NOP (undefined)
+        case 0xFD: break; // *NOP (undefined)
+        
         default:
-            // Unknown opcode
+            // Unknown opcode - should never reach here if all 256 are covered
             break;
     }
 }
