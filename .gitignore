@@ -1,0 +1,23 @@
+# Build artifacts
+*.o
+*.moc.cpp
+8085_emulator
+compile_commands.json
+
+# Build directories
+build/
+cmake-build-*/
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Backup files
+*~
+*.bak
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db

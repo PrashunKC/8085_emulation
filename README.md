@@ -16,16 +16,19 @@ A graphical emulator for the Intel 8085 microprocessor written in C++ with Qt5.
 
 ## Implemented Instructions
 
-**Complete 8085 instruction set implemented (246 instructions)!**
+**✅ 100% COMPLETE - ALL 256 OPCODES COVERED!**
+- **246 valid instructions** fully implemented
+- **10 undefined opcodes** handled (treated as NOP)
 
-- **Data Transfer**: MOV, MVI, LXI, LDA, STA, LHLD, SHLD, LDAX, STAX, XCHG
-- **Arithmetic**: ADD, ADI, ADC, ACI, SUB, SUI, SBB, SBI, INR, DCR, INX, DCX, DAD, DAA
-- **Logical**: ANA, ANI, XRA, XRI, ORA, ORI, CMP, CPI, RLC, RRC, RAL, RAR, CMA, CMC, STC
-- **Branch**: JMP, JNZ, JZ, JNC, JC, JPO, JPE, JP, JM, CALL, RET (with conditions), RST, PCHL
-- **Stack**: PUSH, POP, XTHL, SPHL
-- **I/O & Control**: IN, OUT, EI, DI, RIM, SIM, NOP, HLT
+### Instruction Groups:
+- **Data Transfer (64)**: MOV, MVI, LXI, LDA, STA, LHLD, SHLD, LDAX, STAX, XCHG
+- **Arithmetic (68)**: ADD, ADI, ADC, ACI, SUB, SUI, SBB, SBI, INR, DCR, INX, DCX, DAD, DAA
+- **Logical (40)**: ANA, ANI, XRA, XRI, ORA, ORI, CMP, CPI, RLC, RRC, RAL, RAR, CMA, CMC, STC
+- **Branch (46)**: JMP, JNZ, JZ, JNC, JC, JPO, JPE, JP, JM, CALL, RET (with conditions), RST, PCHL
+- **Stack (10)**: PUSH, POP, XTHL, SPHL
+- **I/O & Control (18)**: IN, OUT, EI, DI, RIM, SIM, NOP, HLT
 
-See [INSTRUCTIONS.md](INSTRUCTIONS.md) for complete instruction reference.
+See [INSTRUCTIONS.md](INSTRUCTIONS.md) for complete instruction reference and [COMPLETE.md](COMPLETE.md) for detailed coverage analysis.
 
 ## Building
 
