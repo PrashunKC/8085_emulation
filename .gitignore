@@ -1,0 +1,25 @@
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+8085_emulator
+
+# Qt MOC generated files
+*.moc.cpp
+moc_*.cpp
+
+# Build directories
+build/
+cmake-build-*/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
