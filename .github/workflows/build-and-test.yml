@@ -1,0 +1,54 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Install Qt5 dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y qt5-qmake qtbase5-dev qtbase5-dev-tools
+    
+    - name: Build with Make
+      run: |
+        make
+    
+    - name: Check build output
+      run: |
+        if [ -f "8085_emulator" ]; then
+          echo "Build successful: 8085_emulator binary created"
+          ls -lh 8085_emulator
+        else
+          echo "Build failed: 8085_emulator binary not found"
+          exit 1
+        fi
+    
+    - name: Clean build artifacts
+      run: make clean
+    
+    - name: Build with CMake
+      run: |
+        mkdir -p build
+        cd build
+        cmake ..
+        make
+    
+    - name: Check CMake build output
+      run: |
+        if [ -f "build/8085_emulator" ]; then
+          echo "CMake build successful: 8085_emulator binary created"
+          ls -lh build/8085_emulator
+        else
+          echo "CMake build failed: 8085_emulator binary not found"
+          exit 1
+        fi

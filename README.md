@@ -72,6 +72,13 @@ ADD B        ; Add B to A (result: A = 8)
 HLT          ; Halt execution
 ```
 
+## Contributing
+
+This repository uses branch protection rules to maintain code quality. See [BRANCH_PROTECTION.md](BRANCH_PROTECTION.md) for details on:
+- Protection against force pushes
+- Protection against branch deletion
+- Required status checks before merging
+
 ## License
 
 Free to use and modify.

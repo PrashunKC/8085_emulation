@@ -1,0 +1,29 @@
+# Build artifacts
+8085_emulator
+*.o
+*.moc.cpp
+build/
+*.exe
+
+# Qt artifacts
+*.pro.user
+*.pro.user.*
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+/tmp/
