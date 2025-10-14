@@ -1,0 +1,14 @@
+{
+    "files.readonlyInclude": {
+        "{**/.c4z/.extsrcs/*.PROTSYM.cbl,**/.c4z/.extsrcs/*.PROTSYM.listing}": true
+    },
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/compile_commands.json",
+    "C_Cpp.intelliSenseEngine": "default",
+    "files.associations": {
+        "qapplication": "cpp",
+        "qmainwindow": "cpp",
+        "qwidget": "cpp",
+        "array": "cpp",
+        "string": "cpp"
+    }
+}
