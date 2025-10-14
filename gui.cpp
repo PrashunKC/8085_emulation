@@ -37,22 +37,26 @@ public:
         QVBoxLayout *registerLayout = new QVBoxLayout();
         registerDisplay = new QTextEdit();
         registerDisplay->setReadOnly(true);
-        registerDisplay->setMaximumHeight(150);
-        registerDisplay->setFont(QFont("Monospace", 10));
+        registerDisplay->setMinimumHeight(100);
+        registerDisplay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        registerDisplay->setFont(QFont("Monospace", 11));
+        registerDisplay->setLineWrapMode(QTextEdit::NoWrap);
         registerLayout->addWidget(registerDisplay);
         registerGroup->setLayout(registerLayout);
-        leftLayout->addWidget(registerGroup);
+        leftLayout->addWidget(registerGroup, 3); // Give it weight for scaling
         
         // Flags display
         QGroupBox *flagsGroup = new QGroupBox("Flags");
         QVBoxLayout *flagsLayout = new QVBoxLayout();
         flagsDisplay = new QTextEdit();
         flagsDisplay->setReadOnly(true);
-        flagsDisplay->setMaximumHeight(50);
-        flagsDisplay->setFont(QFont("Monospace", 10));
+        flagsDisplay->setMinimumHeight(40);
+        flagsDisplay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        flagsDisplay->setFont(QFont("Monospace", 11));
+        flagsDisplay->setLineWrapMode(QTextEdit::NoWrap);
         flagsLayout->addWidget(flagsDisplay);
         flagsGroup->setLayout(flagsLayout);
-        leftLayout->addWidget(flagsGroup);
+        leftLayout->addWidget(flagsGroup, 1); // Give it weight for scaling
         
         // Control buttons
         QGroupBox *controlGroup = new QGroupBox("Controls");
@@ -70,6 +74,13 @@ public:
         connect(stopBtn, &QPushButton::clicked, this, &Emulator8085Window::onStop);
         connect(loadBtn, &QPushButton::clicked, this, &Emulator8085Window::onLoadProgram);
         
+        // Set minimum button heights for better visibility
+        resetBtn->setMinimumHeight(35);
+        stepBtn->setMinimumHeight(35);
+        runBtn->setMinimumHeight(35);
+        stopBtn->setMinimumHeight(35);
+        loadBtn->setMinimumHeight(35);
+        
         controlLayout->addWidget(resetBtn);
         controlLayout->addWidget(stepBtn);
         controlLayout->addWidget(runBtn);
@@ -78,9 +89,9 @@ public:
         controlLayout->addStretch();
         
         controlGroup->setLayout(controlLayout);
-        leftLayout->addWidget(controlGroup);
+        controlGroup->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        leftLayout->addWidget(controlGroup, 2); // Give it weight for scaling
         
-        leftLayout->addStretch();
         mainLayout->addLayout(leftLayout, 1);
         
         // Right panel - Memory view
@@ -90,7 +101,12 @@ public:
         QVBoxLayout *memoryLayout = new QVBoxLayout();
         
         memoryTable = new QTableWidget(16, 17);
-        memoryTable->setFont(QFont("Monospace", 9));
+        memoryTable->setFont(QFont("Monospace", 10));
+        memoryTable->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        memoryTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        memoryTable->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        memoryTable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        memoryTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         
         // Set headers
         QStringList headers;
@@ -101,13 +117,9 @@ public:
         memoryTable->setHorizontalHeaderLabels(headers);
         memoryTable->verticalHeader()->setVisible(false);
         
-        // Set column widths
-        for (int i = 0; i < 17; i++) {
-            memoryTable->setColumnWidth(i, 40);
-        }
-        
         memoryLayout->addWidget(memoryTable);
         memoryGroup->setLayout(memoryLayout);
+        memoryGroup->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         rightLayout->addWidget(memoryGroup);
         
         // Status bar
