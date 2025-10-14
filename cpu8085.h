@@ -54,6 +54,14 @@ private:
     uint8_t sub(uint8_t value, bool withBorrow = false);
     void push(uint16_t value);
     uint16_t pop();
+    
+    // Helper methods for register pairs
+    uint16_t getBC() const { return (B << 8) | C; }
+    uint16_t getDE() const { return (D << 8) | E; }
+    uint16_t getHL() const { return (H << 8) | L; }
+    void setBC(uint16_t val) { B = (val >> 8) & 0xFF; C = val & 0xFF; }
+    void setDE(uint16_t val) { D = (val >> 8) & 0xFF; E = val & 0xFF; }
+    void setHL(uint16_t val) { H = (val >> 8) & 0xFF; L = val & 0xFF; }
 };
 
 #endif // CPU8085_H

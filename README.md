@@ -16,15 +16,16 @@ A graphical emulator for the Intel 8085 microprocessor written in C++ with Qt5.
 
 ## Implemented Instructions
 
-Currently implemented basic instructions:
-- NOP (0x00)
-- HLT (0x76)
-- MOV r1, r2 (various)
-- MVI r, data (Move Immediate)
-- ADD r (Add register to A)
-- SUB r (Subtract register from A)
-- INR r (Increment register)
-- JMP addr (Jump to address)
+**Complete 8085 instruction set implemented (246 instructions)!**
+
+- **Data Transfer**: MOV, MVI, LXI, LDA, STA, LHLD, SHLD, LDAX, STAX, XCHG
+- **Arithmetic**: ADD, ADI, ADC, ACI, SUB, SUI, SBB, SBI, INR, DCR, INX, DCX, DAD, DAA
+- **Logical**: ANA, ANI, XRA, XRI, ORA, ORI, CMP, CPI, RLC, RRC, RAL, RAR, CMA, CMC, STC
+- **Branch**: JMP, JNZ, JZ, JNC, JC, JPO, JPE, JP, JM, CALL, RET (with conditions), RST, PCHL
+- **Stack**: PUSH, POP, XTHL, SPHL
+- **I/O & Control**: IN, OUT, EI, DI, RIM, SIM, NOP, HLT
+
+See [INSTRUCTIONS.md](INSTRUCTIONS.md) for complete instruction reference.
 
 ## Building
 
@@ -70,11 +71,4 @@ HLT          ; Halt execution
 
 ## License
 
-This software is proprietary and confidential. All rights reserved.
-
-Copyright (c) 2025, Prashun K.C.
-
-Unauthorized copying, distribution, or modification of this software is 
-strictly prohibited without express written permission from the copyright holder.
-
-See the [LICENSE](LICENSE) file for more details.
+Free to use and modify.
