@@ -1,0 +1,44 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-Wall",
+      "-DQT_WIDGETS_LIB",
+      "-I/usr/include/qt5/QtWidgets",
+      "-I/usr/include/qt5",
+      "-DQT_GUI_LIB",
+      "-I/usr/include/qt5/QtGui",
+      "-DQT_CORE_LIB",
+      "-I/usr/include/qt5/QtCore",
+      "-c",
+      "-o",
+      "gui.o",
+      "gui.cpp"
+    ],
+    "directory": "/home/kde/Documents/codes/8085_emulation",
+    "file": "/home/kde/Documents/codes/8085_emulation/gui.cpp",
+    "output": "/home/kde/Documents/codes/8085_emulation/gui.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++17",
+      "-Wall",
+      "-DQT_WIDGETS_LIB",
+      "-I/usr/include/qt5/QtWidgets",
+      "-I/usr/include/qt5",
+      "-DQT_GUI_LIB",
+      "-I/usr/include/qt5/QtGui",
+      "-DQT_CORE_LIB",
+      "-I/usr/include/qt5/QtCore",
+      "-c",
+      "-o",
+      "cpu8085.o",
+      "cpu8085.cpp"
+    ],
+    "directory": "/home/kde/Documents/codes/8085_emulation",
+    "file": "/home/kde/Documents/codes/8085_emulation/cpu8085.cpp",
+    "output": "/home/kde/Documents/codes/8085_emulation/cpu8085.o"
+  }
+]
