@@ -70,4 +70,11 @@ HLT          ; Halt execution
 
 ## License
 
-Free to use and modify.
+This software is proprietary and confidential. All rights reserved.
+
+Copyright (c) 2025, Prashun K.C.
+
+Unauthorized copying, distribution, or modification of this software is 
+strictly prohibited without express written permission from the copyright holder.
+
+See the [LICENSE](LICENSE) file for more details.
