@@ -1,0 +1,56 @@
+{
+  "description": "Recommended branch protection configuration for main branch",
+  "branch": "main",
+  "settings": {
+    "required_pull_request_reviews": {
+      "enabled": true,
+      "dismiss_stale_reviews": true,
+      "require_code_owner_reviews": false,
+      "required_approving_review_count": 1,
+      "require_last_push_approval": false
+    },
+    "required_status_checks": {
+      "enabled": true,
+      "strict": true,
+      "contexts": [
+        "build",
+        "check-files"
+      ],
+      "note": "Status check contexts will appear after first workflow run"
+    },
+    "enforce_admins": {
+      "enabled": true,
+      "description": "Include administrators in branch protection rules"
+    },
+    "required_conversation_resolution": {
+      "enabled": true,
+      "description": "All conversations must be resolved before merging"
+    },
+    "allow_force_pushes": {
+      "enabled": false,
+      "description": "CRITICAL: Prevent force pushes to protect git history"
+    },
+    "allow_deletions": {
+      "enabled": false,
+      "description": "CRITICAL: Prevent branch deletion"
+    },
+    "required_linear_history": {
+      "enabled": false,
+      "description": "Optional: Enforce linear history (no merge commits)"
+    },
+    "required_signatures": {
+      "enabled": false,
+      "description": "Optional: Require signed commits"
+    },
+    "lock_branch": {
+      "enabled": false,
+      "description": "Optional: Make branch read-only (extreme protection)"
+    }
+  },
+  "notes": [
+    "This is a reference configuration file, not automatically applied",
+    "Branch protection rules must be configured manually via GitHub web UI",
+    "See .github/BRANCH_PROTECTION_SETUP.md for step-by-step instructions",
+    "See BRANCH_PROTECTION.md for detailed explanations"
+  ]
+}

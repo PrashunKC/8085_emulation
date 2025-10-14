@@ -2,6 +2,8 @@
 
 This document outlines the recommended branch protection rules for the 8085 Emulator repository to maintain code quality and prevent accidental changes to critical branches.
 
+> **Quick Setup**: See [.github/BRANCH_PROTECTION_SETUP.md](.github/BRANCH_PROTECTION_SETUP.md) for step-by-step instructions to configure these rules.
+
 ## Recommended Settings for Main Branch
 
 ### 1. Protect Against Force Push
