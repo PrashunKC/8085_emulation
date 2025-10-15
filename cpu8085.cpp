@@ -15,9 +15,16 @@ void CPU8085::reset() {
     memory.fill(0);
     halted = false;
     interruptEnabled = false;
+    currentBank = 0;
+    bankSwitchingEnabled = false;
+    // Initialize all banks to zero
+    for (auto& bank : banks) {
+        bank.fill(0);
+    }
 }
 
 uint8_t CPU8085::fetchByte() {
+    // Instructions always fetch from main memory (lower 32KB is non-banked)
     return memory[PC++];
 }
 
@@ -45,29 +52,29 @@ void CPU8085::executeInstruction(uint8_t opcode) {
         
         // Data Transfer Group - MOV r1, r2 (all 49 combinations)
         case 0x40: B = B; break; case 0x41: B = C; break; case 0x42: B = D; break; case 0x43: B = E; break;
-        case 0x44: B = H; break; case 0x45: B = L; break; case 0x46: B = memory[getHL()]; break; case 0x47: B = A; break;
+        case 0x44: B = H; break; case 0x45: B = L; break; case 0x46: B = readMem(getHL()); break; case 0x47: B = A; break;
         case 0x48: C = B; break; case 0x49: C = C; break; case 0x4A: C = D; break; case 0x4B: C = E; break;
-        case 0x4C: C = H; break; case 0x4D: C = L; break; case 0x4E: C = memory[getHL()]; break; case 0x4F: C = A; break;
+        case 0x4C: C = H; break; case 0x4D: C = L; break; case 0x4E: C = readMem(getHL()); break; case 0x4F: C = A; break;
         case 0x50: D = B; break; case 0x51: D = C; break; case 0x52: D = D; break; case 0x53: D = E; break;
-        case 0x54: D = H; break; case 0x55: D = L; break; case 0x56: D = memory[getHL()]; break; case 0x57: D = A; break;
+        case 0x54: D = H; break; case 0x55: D = L; break; case 0x56: D = readMem(getHL()); break; case 0x57: D = A; break;
         case 0x58: E = B; break; case 0x59: E = C; break; case 0x5A: E = D; break; case 0x5B: E = E; break;
-        case 0x5C: E = H; break; case 0x5D: E = L; break; case 0x5E: E = memory[getHL()]; break; case 0x5F: E = A; break;
+        case 0x5C: E = H; break; case 0x5D: E = L; break; case 0x5E: E = readMem(getHL()); break; case 0x5F: E = A; break;
         case 0x60: H = B; break; case 0x61: H = C; break; case 0x62: H = D; break; case 0x63: H = E; break;
-        case 0x64: H = H; break; case 0x65: H = L; break; case 0x66: H = memory[getHL()]; break; case 0x67: H = A; break;
+        case 0x64: H = H; break; case 0x65: H = L; break; case 0x66: H = readMem(getHL()); break; case 0x67: H = A; break;
         case 0x68: L = B; break; case 0x69: L = C; break; case 0x6A: L = D; break; case 0x6B: L = E; break;
-        case 0x6C: L = H; break; case 0x6D: L = L; break; case 0x6E: L = memory[getHL()]; break; case 0x6F: L = A; break;
-        case 0x70: memory[getHL()] = B; break; case 0x71: memory[getHL()] = C; break;
-        case 0x72: memory[getHL()] = D; break; case 0x73: memory[getHL()] = E; break;
-        case 0x74: memory[getHL()] = H; break; case 0x75: memory[getHL()] = L; break;
-        case 0x77: memory[getHL()] = A; break;
+        case 0x6C: L = H; break; case 0x6D: L = L; break; case 0x6E: L = readMem(getHL()); break; case 0x6F: L = A; break;
+        case 0x70: writeMem(getHL(), B); break; case 0x71: writeMem(getHL(), C); break;
+        case 0x72: writeMem(getHL(), D); break; case 0x73: writeMem(getHL(), E); break;
+        case 0x74: writeMem(getHL(), H); break; case 0x75: writeMem(getHL(), L); break;
+        case 0x77: writeMem(getHL(), A); break;
         case 0x78: A = B; break; case 0x79: A = C; break; case 0x7A: A = D; break; case 0x7B: A = E; break;
-        case 0x7C: A = H; break; case 0x7D: A = L; break; case 0x7E: A = memory[getHL()]; break; case 0x7F: A = A; break;
+        case 0x7C: A = H; break; case 0x7D: A = L; break; case 0x7E: A = readMem(getHL()); break; case 0x7F: A = A; break;
         
         // MVI r, data
         case 0x06: B = fetchByte(); break; case 0x0E: C = fetchByte(); break;
         case 0x16: D = fetchByte(); break; case 0x1E: E = fetchByte(); break;
         case 0x26: H = fetchByte(); break; case 0x2E: L = fetchByte(); break;
-        case 0x36: memory[getHL()] = fetchByte(); break; case 0x3E: A = fetchByte(); break;
+        case 0x36: writeMem(getHL(), fetchByte()); break; case 0x3E: A = fetchByte(); break;
         
         // LXI rp, data16
         case 0x01: setBC(fetchWord()); break; // LXI B
@@ -76,18 +83,18 @@ void CPU8085::executeInstruction(uint8_t opcode) {
         case 0x31: SP = fetchWord(); break;    // LXI SP
         
         // LDA/STA addr
-        case 0x3A: addr = fetchWord(); A = memory[addr]; break; // LDA
-        case 0x32: addr = fetchWord(); memory[addr] = A; break; // STA
+        case 0x3A: addr = fetchWord(); A = readMem(addr); break; // LDA
+        case 0x32: addr = fetchWord(); writeMem(addr, A); break; // STA
         
         // LHLD/SHLD addr
-        case 0x2A: addr = fetchWord(); L = memory[addr]; H = memory[addr + 1]; break; // LHLD
-        case 0x22: addr = fetchWord(); memory[addr] = L; memory[addr + 1] = H; break; // SHLD
+        case 0x2A: addr = fetchWord(); L = readMem(addr); H = readMem(addr + 1); break; // LHLD
+        case 0x22: addr = fetchWord(); writeMem(addr, L); writeMem(addr + 1, H); break; // SHLD
         
         // LDAX/STAX
-        case 0x0A: A = memory[getBC()]; break; // LDAX B
-        case 0x1A: A = memory[getDE()]; break; // LDAX D
-        case 0x02: memory[getBC()] = A; break; // STAX B
-        case 0x12: memory[getDE()] = A; break; // STAX D
+        case 0x0A: A = readMem(getBC()); break; // LDAX B
+        case 0x1A: A = readMem(getDE()); break; // LDAX D
+        case 0x02: writeMem(getBC(), A); break; // STAX B
+        case 0x12: writeMem(getDE(), A); break; // STAX D
         
         // XCHG
         case 0xEB: temp8 = D; D = H; H = temp8; temp8 = E; E = L; L = temp8; break;
@@ -95,39 +102,39 @@ void CPU8085::executeInstruction(uint8_t opcode) {
         // Arithmetic Group - ADD
         case 0x80: A = add(B); break; case 0x81: A = add(C); break; case 0x82: A = add(D); break;
         case 0x83: A = add(E); break; case 0x84: A = add(H); break; case 0x85: A = add(L); break;
-        case 0x86: A = add(memory[getHL()]); break; case 0x87: A = add(A); break;
+        case 0x86: A = add(readMem(getHL())); break; case 0x87: A = add(A); break;
         case 0xC6: A = add(fetchByte()); break; // ADI
         
         // ADC (Add with Carry)
         case 0x88: A = add(B, true); break; case 0x89: A = add(C, true); break; case 0x8A: A = add(D, true); break;
         case 0x8B: A = add(E, true); break; case 0x8C: A = add(H, true); break; case 0x8D: A = add(L, true); break;
-        case 0x8E: A = add(memory[getHL()], true); break; case 0x8F: A = add(A, true); break;
+        case 0x8E: A = add(readMem(getHL()), true); break; case 0x8F: A = add(A, true); break;
         case 0xCE: A = add(fetchByte(), true); break; // ACI
         
         // SUB
         case 0x90: A = sub(B); break; case 0x91: A = sub(C); break; case 0x92: A = sub(D); break;
         case 0x93: A = sub(E); break; case 0x94: A = sub(H); break; case 0x95: A = sub(L); break;
-        case 0x96: A = sub(memory[getHL()]); break; case 0x97: A = sub(A); break;
+        case 0x96: A = sub(readMem(getHL())); break; case 0x97: A = sub(A); break;
         case 0xD6: A = sub(fetchByte()); break; // SUI
         
         // SBB (Subtract with Borrow)
         case 0x98: A = sub(B, true); break; case 0x99: A = sub(C, true); break; case 0x9A: A = sub(D, true); break;
         case 0x9B: A = sub(E, true); break; case 0x9C: A = sub(H, true); break; case 0x9D: A = sub(L, true); break;
-        case 0x9E: A = sub(memory[getHL()], true); break; case 0x9F: A = sub(A, true); break;
+        case 0x9E: A = sub(readMem(getHL()), true); break; case 0x9F: A = sub(A, true); break;
         case 0xDE: A = sub(fetchByte(), true); break; // SBI
         
         // INR (Increment)
         case 0x04: B++; updateFlags(B); break; case 0x0C: C++; updateFlags(C); break;
         case 0x14: D++; updateFlags(D); break; case 0x1C: E++; updateFlags(E); break;
         case 0x24: H++; updateFlags(H); break; case 0x2C: L++; updateFlags(L); break;
-        case 0x34: temp8 = memory[getHL()] + 1; memory[getHL()] = temp8; updateFlags(temp8); break;
+        case 0x34: temp8 = readMem(getHL()) + 1; writeMem(getHL(), temp8); updateFlags(temp8); break;
         case 0x3C: A++; updateFlags(A); break;
         
         // DCR (Decrement)
         case 0x05: B--; updateFlags(B); break; case 0x0D: C--; updateFlags(C); break;
         case 0x15: D--; updateFlags(D); break; case 0x1D: E--; updateFlags(E); break;
         case 0x25: H--; updateFlags(H); break; case 0x2D: L--; updateFlags(L); break;
-        case 0x35: temp8 = memory[getHL()] - 1; memory[getHL()] = temp8; updateFlags(temp8); break;
+        case 0x35: temp8 = readMem(getHL()) - 1; writeMem(getHL(), temp8); updateFlags(temp8); break;
         case 0x3D: A--; updateFlags(A); break;
         
         // INX (Increment Register Pair)
@@ -161,26 +168,26 @@ void CPU8085::executeInstruction(uint8_t opcode) {
         case 0xA0: A &= B; updateFlagsLogical(A); break; case 0xA1: A &= C; updateFlagsLogical(A); break;
         case 0xA2: A &= D; updateFlagsLogical(A); break; case 0xA3: A &= E; updateFlagsLogical(A); break;
         case 0xA4: A &= H; updateFlagsLogical(A); break; case 0xA5: A &= L; updateFlagsLogical(A); break;
-        case 0xA6: A &= memory[getHL()]; updateFlagsLogical(A); break; case 0xA7: A &= A; updateFlagsLogical(A); break;
+        case 0xA6: A &= readMem(getHL()); updateFlagsLogical(A); break; case 0xA7: A &= A; updateFlagsLogical(A); break;
         case 0xE6: A &= fetchByte(); updateFlagsLogical(A); break; // ANI
         
         // XRA (XOR)
         case 0xA8: A ^= B; updateFlagsLogical(A); break; case 0xA9: A ^= C; updateFlagsLogical(A); break;
         case 0xAA: A ^= D; updateFlagsLogical(A); break; case 0xAB: A ^= E; updateFlagsLogical(A); break;
         case 0xAC: A ^= H; updateFlagsLogical(A); break; case 0xAD: A ^= L; updateFlagsLogical(A); break;
-        case 0xAE: A ^= memory[getHL()]; updateFlagsLogical(A); break; case 0xAF: A ^= A; updateFlagsLogical(A); break;
+        case 0xAE: A ^= readMem(getHL()); updateFlagsLogical(A); break; case 0xAF: A ^= A; updateFlagsLogical(A); break;
         case 0xEE: A ^= fetchByte(); updateFlagsLogical(A); break; // XRI
         
         // ORA (OR)
         case 0xB0: A |= B; updateFlagsLogical(A); break; case 0xB1: A |= C; updateFlagsLogical(A); break;
         case 0xB2: A |= D; updateFlagsLogical(A); break; case 0xB3: A |= E; updateFlagsLogical(A); break;
         case 0xB4: A |= H; updateFlagsLogical(A); break; case 0xB5: A |= L; updateFlagsLogical(A); break;
-        case 0xB6: A |= memory[getHL()]; updateFlagsLogical(A); break; case 0xB7: A |= A; updateFlagsLogical(A); break;
+        case 0xB6: A |= readMem(getHL()); updateFlagsLogical(A); break; case 0xB7: A |= A; updateFlagsLogical(A); break;
         case 0xF6: A |= fetchByte(); updateFlagsLogical(A); break; // ORI
         
         // CMP (Compare)
         case 0xB8: sub(B); break; case 0xB9: sub(C); break; case 0xBA: sub(D); break; case 0xBB: sub(E); break;
-        case 0xBC: sub(H); break; case 0xBD: sub(L); break; case 0xBE: sub(memory[getHL()]); break; case 0xBF: sub(A); break;
+        case 0xBC: sub(H); break; case 0xBD: sub(L); break; case 0xBE: sub(readMem(getHL())); break; case 0xBF: sub(A); break;
         case 0xFE: sub(fetchByte()); break; // CPI
         
         // RLC (Rotate Left)
@@ -269,20 +276,32 @@ void CPU8085::executeInstruction(uint8_t opcode) {
         
         // XTHL (Exchange HL with top of stack)
         case 0xE3:
-            temp8 = memory[SP];
-            memory[SP] = L;
+            temp8 = readMem(SP);
+            writeMem(SP, L);
             L = temp8;
-            temp8 = memory[SP + 1];
-            memory[SP + 1] = H;
+            temp8 = readMem(SP + 1);
+            writeMem(SP + 1, H);
             H = temp8;
             break;
         
         // SPHL (Move HL to SP)
         case 0xF9: SP = getHL(); break;
         
-        // IN/OUT (I/O instructions - simplified)
-        case 0xDB: fetchByte(); break; // IN port (not implemented)
-        case 0xD3: fetchByte(); break; // OUT port (not implemented)
+        // IN/OUT (I/O instructions)
+        case 0xDB: // IN port
+            temp8 = fetchByte();
+            if (temp8 == 0xFF && bankSwitchingEnabled) {
+                // Read current bank into accumulator
+                A = currentBank;
+            }
+            break;
+        case 0xD3: // OUT port
+            temp8 = fetchByte();
+            if (temp8 == 0xFF && bankSwitchingEnabled) {
+                // Switch to bank specified in accumulator
+                setBank(A);
+            }
+            break;
         
         // EI/DI (Enable/Disable Interrupts)
         case 0xFB: interruptEnabled = true; break;  // EI
@@ -353,13 +372,13 @@ void CPU8085::updateFlagsLogical(uint8_t result) {
 }
 
 void CPU8085::push(uint16_t value) {
-    memory[--SP] = (value >> 8) & 0xFF;
-    memory[--SP] = value & 0xFF;
+    writeMem(--SP, (value >> 8) & 0xFF);
+    writeMem(--SP, value & 0xFF);
 }
 
 uint16_t CPU8085::pop() {
-    uint8_t low = memory[SP++];
-    uint8_t high = memory[SP++];
+    uint8_t low = readMem(SP++);
+    uint8_t high = readMem(SP++);
     return (high << 8) | low;
 }
 
@@ -389,14 +408,48 @@ std::string CPU8085::getFlagsState() const {
 }
 
 uint8_t CPU8085::getMemory(uint16_t address) const {
+    if (bankSwitchingEnabled && address >= 0x8000) {
+        return banks[currentBank][address];
+    }
     return memory[address];
 }
 
 void CPU8085::setMemory(uint16_t address, uint8_t value) {
-    memory[address] = value;
+    if (bankSwitchingEnabled && address >= 0x8000) {
+        banks[currentBank][address] = value;
+    } else {
+        memory[address] = value;
+    }
 }
 
 void CPU8085::loadProgram(const uint8_t* program, size_t size, uint16_t startAddress) {
+    // Programs are always loaded into main memory (non-banked area)
     std::memcpy(&memory[startAddress], program, size);
     PC = startAddress;
+}
+
+// Bank switching operations
+void CPU8085::enableBankSwitching(bool enable) {
+    bankSwitchingEnabled = enable;
+    if (enable) {
+        // Copy upper 32KB of current memory to bank 0 (0x8000-0xFFFF)
+        std::memcpy(&banks[0][0x8000], &memory[0x8000], 0x8000);
+    } else {
+        // Copy current bank's upper 32KB back to main memory
+        std::memcpy(&memory[0x8000], &banks[currentBank][0x8000], 0x8000);
+    }
+}
+
+void CPU8085::setBank(uint8_t bank) {
+    if (bank < MAX_BANKS) {
+        currentBank = bank;
+    }
+}
+
+uint8_t CPU8085::getBank() const {
+    return currentBank;
+}
+
+uint8_t CPU8085::getBankCount() const {
+    return MAX_BANKS;
 }

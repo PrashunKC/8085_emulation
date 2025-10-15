@@ -8,6 +8,10 @@ A graphical emulator for the Intel 8085 microprocessor written in C++ with Qt5.
 - **Flags Display**: Shows processor flags (S, Z, AC, P, CY)
 - **Program Output Display**: Shows key register values in multiple formats (binary, hex, decimal) and program status
 - **Memory Viewer**: Displays first 256 bytes of memory in hex format
+- **Bank Switching**: Support for up to 8 memory banks (512KB total addressable memory)
+  - Switch banks using OUT port 0xFF
+  - Read current bank using IN port 0xFF
+  - Each bank provides full 64KB address space
 - **Control Buttons**:
   - Reset: Reset CPU to initial state
   - Step: Execute one instruction
@@ -55,6 +59,48 @@ make
 3. Or click "Run" to execute continuously
 4. Watch the registers, flags, and memory update in real-time
 5. The current PC location is highlighted in yellow in the memory view
+
+## Bank Switching
+
+The emulator supports bank switching to extend memory beyond the 8085's native 64KB address space. This is useful for BIOS and OS development.
+
+### Using Bank Switching
+
+1. **Enable bank switching** programmatically:
+```cpp
+cpu.enableBankSwitching(true);
+```
+
+2. **Switch banks** from assembly code:
+```asm
+MVI A, 02h      ; Load bank number (0-7) into accumulator
+OUT 0FFh        ; Switch to bank 2
+; Access memory in 0x8000-0xFFFF range - now using bank 2
+LXI H, 8000h    ; Point to banked memory area
+MVI M, 42h      ; Write to bank 2
+MVI A, 00h      ; Load bank 0
+OUT 0FFh        ; Switch back to bank 0
+```
+
+3. **Read current bank**:
+```asm
+IN 0FFh         ; Read current bank number into accumulator
+```
+
+### Features
+- **8 banks**: Total of 288KB addressable memory (32KB fixed + 8 × 32KB banked)
+- **Split memory model**: 
+  - 0x0000-0x7FFF (32KB): Fixed, non-banked memory for ROM/program code
+  - 0x8000-0xFFFF (32KB): Banked memory for data/extended RAM
+- **Memory isolation**: Each bank has independent 32KB address space
+- **I/O control**: Use standard IN/OUT instructions on port 0xFF
+- **API access**: Control banks programmatically via `setBank()` and `getBank()`
+
+### Example Use Cases
+- **BIOS development**: Store BIOS routines in bank 0
+- **Multi-tasking OS**: Separate memory spaces for different processes
+- **Large programs**: Break programs across multiple banks
+- **Data storage**: Use banks as extended RAM
 
 ## Extending
 

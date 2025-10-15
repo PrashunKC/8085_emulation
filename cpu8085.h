@@ -27,6 +27,12 @@ public:
     // Memory (64KB)
     std::array<uint8_t, 65536> memory;
     
+    // Bank switching support
+    static const int MAX_BANKS = 8;  // Support up to 8 banks (512KB total)
+    std::array<std::array<uint8_t, 65536>, MAX_BANKS> banks;
+    uint8_t currentBank;
+    bool bankSwitchingEnabled;
+    
     // State
     bool halted;
     bool interruptEnabled;
@@ -46,6 +52,12 @@ public:
     // Load program into memory
     void loadProgram(const uint8_t* program, size_t size, uint16_t startAddress = 0x0000);
     
+    // Bank switching operations
+    void enableBankSwitching(bool enable);
+    void setBank(uint8_t bank);
+    uint8_t getBank() const;
+    uint8_t getBankCount() const;
+    
 private:
     void executeInstruction(uint8_t opcode);
     void updateFlags(uint8_t result);
@@ -54,6 +66,23 @@ private:
     uint8_t sub(uint8_t value, bool withBorrow = false);
     void push(uint16_t value);
     uint16_t pop();
+    
+    // Internal memory access helpers (respect bank switching)
+    // Bank switching applies to upper 32KB (0x8000-0xFFFF) only
+    // Lower 32KB (0x0000-0x7FFF) is always from main memory (for ROM/program)
+    inline uint8_t readMem(uint16_t address) const {
+        if (bankSwitchingEnabled && address >= 0x8000) {
+            return banks[currentBank][address];
+        }
+        return memory[address];
+    }
+    inline void writeMem(uint16_t address, uint8_t value) {
+        if (bankSwitchingEnabled && address >= 0x8000) {
+            banks[currentBank][address] = value;
+        } else {
+            memory[address] = value;
+        }
+    }
     
     // Helper methods for register pairs
     uint16_t getBC() const { return (B << 8) | C; }

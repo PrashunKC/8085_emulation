@@ -4,3 +4,8 @@ gui.moc.cpp
 8085_emulator
 *.o
 CHANGELOG.md
+
+# Test binaries
+bank_switching_test
+debug_test*
+bank_test
