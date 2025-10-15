@@ -78,4 +78,4 @@ The result (8) will be displayed in the **Program Output** section in binary (00
 
 ## License
 
-Propiatory.
+BSD-3-Clause
