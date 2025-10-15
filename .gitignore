@@ -9,3 +9,6 @@ CHANGELOG.md
 bank_switching_test
 debug_test*
 bank_test
+
+# Example binaries
+examples/bank_switching_example

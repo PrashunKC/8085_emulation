@@ -33,7 +33,7 @@ A graphical emulator for the Intel 8085 microprocessor written in C++ with Qt5.
 - **Stack (10)**: PUSH, POP, XTHL, SPHL
 - **I/O & Control (18)**: IN, OUT, EI, DI, RIM, SIM, NOP, HLT
 
-See [INSTRUCTIONS.md](INSTRUCTIONS.md) for complete instruction reference and [COMPLETE.md](COMPLETE.md) for detailed coverage analysis.
+See [INSTRUCTIONS.md](INSTRUCTIONS.md) for complete instruction reference, [COMPLETE.md](COMPLETE.md) for detailed coverage analysis, and [BANK_SWITCHING.md](BANK_SWITCHING.md) for bank switching guide.
 
 ## Building
 
