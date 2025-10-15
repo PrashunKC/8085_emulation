@@ -1,0 +1,5 @@
+# Ignore build artifacts and generated files
+build/
+gui.moc.cpp
+8085_emulator
+*.o
