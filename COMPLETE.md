@@ -2,7 +2,7 @@
 
 ## Summary
 
-✅ **ALL 256 OPCODES COVERED!**
+ **ALL 256 OPCODES COVERED!**
 - **246 valid instructions** fully implemented
 - **10 undefined opcodes** handled (treated as NOP)
 
@@ -88,7 +88,7 @@ These opcodes are **illegal/undefined** in the 8085 and are handled as NOP:
 
 ## Implementation Status
 
-### ✅ Fully Implemented Features
+### Fully Implemented Features
 - All 246 valid 8085 instructions
 - All addressing modes
 - All register operations
@@ -105,7 +105,7 @@ These opcodes are **illegal/undefined** in the 8085 and are handled as NOP:
 - Interrupt control
 - All undefined opcodes handled
 
-### 🎯 100% Complete!
+### 100% Complete!
 
 The emulator now handles **every single opcode** from 0x00 to 0xFF, making it a complete 8085 microprocessor emulator!
 
