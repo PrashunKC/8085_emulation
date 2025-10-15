@@ -58,6 +58,20 @@ public:
         flagsGroup->setLayout(flagsLayout);
         leftLayout->addWidget(flagsGroup, 1); // Give it weight for scaling
         
+        // Output display
+        QGroupBox *outputGroup = new QGroupBox("Program Output");
+        QVBoxLayout *outputLayout = new QVBoxLayout();
+        outputDisplay = new QTextEdit();
+        outputDisplay->setReadOnly(true);
+        outputDisplay->setMinimumHeight(60);
+        outputDisplay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        outputDisplay->setFont(QFont("Monospace", 11));
+        outputDisplay->setLineWrapMode(QTextEdit::NoWrap);
+        outputDisplay->setPlaceholderText("Program results will appear here...");
+        outputLayout->addWidget(outputDisplay);
+        outputGroup->setLayout(outputLayout);
+        leftLayout->addWidget(outputGroup, 2); // Give it weight for scaling
+        
         // Control buttons
         QGroupBox *controlGroup = new QGroupBox("Controls");
         QVBoxLayout *controlLayout = new QVBoxLayout();
@@ -180,22 +194,24 @@ private slots:
     }
     
     void onLoadProgram() {
-        // Sample program: Add two numbers
+        // Sample program: Add two numbers and store in C
         // MVI A, 05h  ; Load 5 into A
         // MVI B, 03h  ; Load 3 into B
-        // ADD B       ; Add B to A
+        // ADD B       ; Add B to A (result: A = 8)
+        // MOV C, A    ; Copy result to C
         // HLT         ; Halt
         uint8_t program[] = {
             0x3E, 0x05,  // MVI A, 05h
             0x06, 0x03,  // MVI B, 03h
             0x80,        // ADD B
+            0x4F,        // MOV C, A
             0x76         // HLT
         };
         
         cpu->reset();
         cpu->loadProgram(program, sizeof(program), 0x0000);
         updateDisplay();
-        statusLabel->setText("Status: Sample program loaded (Add 5 + 3)");
+        statusLabel->setText("Status: Sample program loaded (Add 5 + 3, result in A and C)");
     }
     
     void updateDisplay() {
@@ -204,6 +220,29 @@ private slots:
         
         // Update flags
         flagsDisplay->setText(QString::fromStdString(cpu->getFlagsState()));
+        
+        // Update output display with result information
+        QString output;
+        output += QString("Accumulator (A): %1 (0x%2, %3d)\n")
+            .arg(QString::number(cpu->A, 2).rightJustified(8, '0'))
+            .arg(cpu->A, 2, 16, QChar('0')).toUpper()
+            .arg(cpu->A);
+        output += QString("B Register: %1 (0x%2, %3d)\n")
+            .arg(QString::number(cpu->B, 2).rightJustified(8, '0'))
+            .arg(cpu->B, 2, 16, QChar('0')).toUpper()
+            .arg(cpu->B);
+        output += QString("C Register: %1 (0x%2, %3d)\n")
+            .arg(QString::number(cpu->C, 2).rightJustified(8, '0'))
+            .arg(cpu->C, 2, 16, QChar('0')).toUpper()
+            .arg(cpu->C);
+        output += QString("\nProgram Counter: 0x%1\n")
+            .arg(cpu->PC, 4, 16, QChar('0')).toUpper();
+        output += QString("Stack Pointer: 0x%1\n")
+            .arg(cpu->SP, 4, 16, QChar('0')).toUpper();
+        output += QString("Status: %1")
+            .arg(cpu->halted ? "HALTED" : "RUNNING");
+        
+        outputDisplay->setText(output);
         
         // Update memory table (first 256 bytes)
         for (int row = 0; row < 16; row++) {
@@ -243,6 +282,7 @@ private:
     CPU8085 *cpu;
     QTextEdit *registerDisplay;
     QTextEdit *flagsDisplay;
+    QTextEdit *outputDisplay;
     QTableWidget *memoryTable;
     QLabel *statusLabel;
     QTimer *runTimer;

@@ -6,6 +6,7 @@ A graphical emulator for the Intel 8085 microprocessor written in C++ with Qt5.
 
 - **Register Display**: Shows all 8085 registers (A, B, C, D, E, H, L, SP, PC)
 - **Flags Display**: Shows processor flags (S, Z, AC, P, CY)
+- **Program Output Display**: Shows key register values in multiple formats (binary, hex, decimal) and program status
 - **Memory Viewer**: Displays first 256 bytes of memory in hex format
 - **Control Buttons**:
   - Reset: Reset CPU to initial state
@@ -69,8 +70,11 @@ The default loaded program demonstrates:
 MVI A, 05h   ; Load 5 into accumulator
 MVI B, 03h   ; Load 3 into B register
 ADD B        ; Add B to A (result: A = 8)
+MOV C, A     ; Copy result to C register
 HLT          ; Halt execution
 ```
+
+The result (8) will be displayed in the **Program Output** section in binary (00001000), hex (0x08), and decimal (8) formats.
 
 ## License
 
