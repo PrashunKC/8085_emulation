@@ -3,3 +3,4 @@ build/
 gui.moc.cpp
 8085_emulator
 *.o
+CHANGELOG.md
