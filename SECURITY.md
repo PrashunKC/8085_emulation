@@ -11,7 +11,7 @@ This project is currently in active development. Security updates will be applie
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in this 8085 Microprocessor Emulator, please report it responsibly:
+If you discover a security vulnerability in this 8085 Microprocessor Emulator, please report it responsibly at: unassigned.56@gmail.com
 
 ### How to Report
 
