@@ -10,21 +10,21 @@
 
 ---
 
-## 🎯 Overview
+## Overview
 
 This project is a fully functional emulator for the Intel 8085 microprocessor, featuring a modern Qt5-based graphical interface. It implements **all 256 opcodes** of the 8085 instruction set, making it suitable for learning, testing 8085 assembly programs, and understanding microprocessor architecture.
 
-## ✨ Key Features
+## Key Features
 
-- 🖥️ **Complete Instruction Set**: All 246 valid 8085 instructions + 10 undefined opcodes
-- 📊 **Real-time Register Display**: Monitor A, B, C, D, E, H, L, SP, and PC registers
-- 🚩 **Flag Visualization**: Track S (Sign), Z (Zero), AC (Auxiliary Carry), P (Parity), and CY (Carry) flags
-- 💾 **Memory Viewer**: Visual representation of the first 256 bytes with PC highlighting
-- 🎮 **Interactive Controls**: Step-by-step execution or continuous run mode
-- 📈 **Multi-format Output**: View results in binary, hexadecimal, and decimal formats
-- 🔧 **Sample Programs**: Built-in example programs to get started quickly
+- **Complete Instruction Set**: All 246 valid 8085 instructions + 10 undefined opcodes
+- **Real-time Register Display**: Monitor A, B, C, D, E, H, L, SP, and PC registers
+- **Flag Visualization**: Track S (Sign), Z (Zero), AC (Auxiliary Carry), P (Parity), and CY (Carry) flags
+- **Memory Viewer**: Visual representation of the first 256 bytes with PC highlighting
+- **Interactive Controls**: Step-by-step execution or continuous run mode
+- **Multi-format Output**: View results in binary, hexadecimal, and decimal formats
+- **Sample Programs**: Built-in example programs to get started quickly
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before building the emulator, ensure you have the following installed:
 
@@ -57,7 +57,7 @@ export PATH="/usr/local/opt/qt@5/bin:$PATH"
 sudo pacman -S base-devel qt5-base cmake
 ```
 
-## 🔨 Building
+## Building
 
 ### Option 1: Using Make (Recommended for Quick Builds)
 
@@ -92,7 +92,7 @@ make
 - Make sure Qt5 development tools are installed
 - For Make builds, ensure `moc-qt5` is available (or update `Makefile` to use `moc`)
 
-## 🚀 Usage
+## Usage
 
 ### Getting Started
 
@@ -126,9 +126,9 @@ HLT          ; Halt execution
 - Current Program Counter (PC) location is highlighted in **yellow**
 - Updates in real-time during execution
 
-## 📖 Instruction Set Coverage
+## Instruction Set Coverage
 
-### ✅ 100% COMPLETE - ALL 256 OPCODES IMPLEMENTED!
+### 100% COMPLETE - ALL 256 OPCODES IMPLEMENTED!
 
 - **246 valid instructions** fully functional
 - **10 undefined opcodes** safely handled (treated as NOP)
@@ -144,11 +144,11 @@ HLT          ; Halt execution
 | **Stack** | 10 | PUSH, POP, XTHL, SPHL |
 | **I/O & Control** | 18 | IN, OUT, EI, DI, RIM, SIM, NOP, HLT |
 
-📚 **Detailed Documentation:**
+**Detailed Documentation:**
 - [INSTRUCTIONS.md](INSTRUCTIONS.md) - Complete instruction reference with opcodes
 - [COMPLETE.md](COMPLETE.md) - Detailed implementation coverage analysis
 
-## 🛠️ Development
+## Development
 
 ### Project Structure
 
@@ -203,7 +203,7 @@ uint8_t program[] = {
 cpu->loadProgram(program, sizeof(program));
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Whether it's bug fixes, new features, or documentation improvements:
 
@@ -215,17 +215,17 @@ Contributions are welcome! Whether it's bug fixes, new features, or documentatio
 
 Please ensure your code follows the existing style and includes appropriate comments.
 
-## 📝 License
+## License
 
 This project is licensed under the **BSD-3-Clause License** - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Intel 8085 microprocessor architecture and instruction set
 - Qt5 framework for the graphical interface
 - The open-source community for tools and resources
 
-## 📧 Contact & Support
+## Contact & Support
 
 - **Issues**: [GitHub Issues](https://github.com/PrashunKC/8085_emulation/issues)
 - **Security**: See [SECURITY.md](SECURITY.md) for reporting security vulnerabilities
@@ -234,8 +234,8 @@ This project is licensed under the **BSD-3-Clause License** - see the [LICENSE](
 
 <div align="center">
 
-**Made with ❤️ for learning and education**
+**Made with care for learning and education**
 
-*Star ⭐ this repository if you find it useful!*
+*Star this repository if you find it useful!*
 
 </div>
